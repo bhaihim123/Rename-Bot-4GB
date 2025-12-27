@@ -29,7 +29,6 @@ async def cancel(bot, update):
 
 @Client.on_callback_query(filters.regex('rename'))
 async def rename(bot, update):
-    chat_id = update.message.chat.id
     msg_id = update.message.reply_to_message_id
     await update.message.delete()
     await update.message.reply_text(
@@ -46,8 +45,7 @@ async def doc(bot, update):
     if not os.path.isdir("Metadata"):
         os.mkdir("Metadata")
 
-    new_name = update.message.text
-    new_filename = new_name.split(":-")[1]
+    new_filename = update.message.text.split(":-")[1]
     file_path = f"downloads/{new_filename}"
 
     message = update.message.reply_to_message
@@ -78,7 +76,7 @@ async def doc(bot, update):
 
     if thumb:
         ph_path = await bot.download_media(thumb)
-        Image.open(ph_path).convert("RGB").resize((320, 320)).save(ph_path, "JPEG")
+        Image.open(ph_path).convert("RGB").save(ph_path, "JPEG")
     else:
         ph_path = None
 
@@ -118,8 +116,7 @@ async def vid(bot, update):
     if not os.path.isdir("Metadata"):
         os.mkdir("Metadata")
 
-    new_name = update.message.text
-    new_filename = new_name.split(":-")[1]
+    new_filename = update.message.text.split(":-")[1]
     file_path = f"downloads/{new_filename}"
 
     message = update.message.reply_to_message
@@ -155,7 +152,7 @@ async def vid(bot, update):
 
     if thumb:
         ph_path = await bot.download_media(thumb)
-        Image.open(ph_path).convert("RGB").resize((320, 320)).save(ph_path, "JPEG")
+        Image.open(ph_path).convert("RGB").save(ph_path, "JPEG")
     else:
         try:
             ph_path_, = await take_screen_shot(
@@ -205,8 +202,7 @@ async def aud(bot, update):
     if not os.path.isdir("Metadata"):
         os.mkdir("Metadata")
 
-    new_name = update.message.text
-    new_filename = new_name.split(":-")[1]
+    new_filename = update.message.text.split(":-")[1]
     file_path = f"downloads/{new_filename}"
 
     message = update.message.reply_to_message
@@ -234,7 +230,7 @@ async def aud(bot, update):
 
     if thumb:
         ph_path = await bot.download_media(thumb)
-        Image.open(ph_path).convert("RGB").resize((320, 320)).save(ph_path, "JPEG")
+        Image.open(ph_path).convert("RGB").save(ph_path, "JPEG")
     else:
         ph_path = None
 
