@@ -1,3 +1,5 @@
+import pyromod.listen  # 🔥 MUST (না দিলে listeners error আসবে)
+
 from helper.progress import progress_for_pyrogram
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply
@@ -21,17 +23,20 @@ app = Client(
 
 # ================= CANCEL =================
 
-@app.on_callback_query(filters.regex("cancel"))
+@app.on_callback_query(filters.regex("^cancel$"))
 async def cancel(_, update):
     try:
-        await update.message.delete()
         await update.message.reply_to_message.delete()
     except:
+        pass
+    try:
         await update.message.delete()
+    except:
+        pass
 
 # ================= RENAME =================
 
-@app.on_callback_query(filters.regex("rename"))
+@app.on_callback_query(filters.regex("^rename$"))
 async def rename(_, update):
     msg_id = update.message.reply_to_message_id
     await update.message.delete()
@@ -43,10 +48,11 @@ async def rename(_, update):
 
 # ================= DOCUMENT =================
 
-@app.on_callback_query(filters.regex("doc"))
+@app.on_callback_query(filters.regex("^doc$"))
 async def doc(_, update):
 
     os.makedirs("Metadata", exist_ok=True)
+    os.makedirs("downloads", exist_ok=True)
 
     new_filename = update.message.text.split(":-")[1]
     file_path = f"downloads/{new_filename}"
@@ -96,10 +102,11 @@ async def doc(_, update):
 
 # ================= VIDEO =================
 
-@app.on_callback_query(filters.regex("vid"))
+@app.on_callback_query(filters.regex("^vid$"))
 async def vid(_, update):
 
     os.makedirs("Metadata", exist_ok=True)
+    os.makedirs("downloads", exist_ok=True)
 
     new_filename = update.message.text.split(":-")[1]
     file_path = f"downloads/{new_filename}"
@@ -136,7 +143,11 @@ async def vid(_, update):
         Image.open(ph_path).convert("RGB").save(ph_path, "JPEG")
     else:
         try:
-            ss, = await take_screen_shot(file_path, ".", random.randint(0, max(duration - 1, 1)))
+            ss, = await take_screen_shot(
+                file_path,
+                ".",
+                random.randint(0, max(duration - 1, 1))
+            )
             _, _, ph_path = await fix_thumb(ss)
         except:
             pass
@@ -161,8 +172,10 @@ async def vid(_, update):
 
 # ================= AUDIO =================
 
-@app.on_callback_query(filters.regex("aud"))
+@app.on_callback_query(filters.regex("^aud$"))
 async def aud(_, update):
+
+    os.makedirs("downloads", exist_ok=True)
 
     new_filename = update.message.text.split(":-")[1]
     file_path = f"downloads/{new_filename}"
