@@ -1,25 +1,24 @@
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-@Client.on_message(filters.private & (filters.document | filters.video | filters.audio))
-async def file_detect(bot, message):
+@Client.on_message(
+    (filters.private | filters.me) &
+    (filters.document | filters.video | filters.audio)
+)
+async def file_detect(client, message):
 
     file = message.document or message.video or message.audio
     if not file:
         return
 
     buttons = InlineKeyboardMarkup([
-        [
-            InlineKeyboardButton("✏ Rename", callback_data="rename"),
-        ],
+        [InlineKeyboardButton("✏ Rename", callback_data="rename")],
         [
             InlineKeyboardButton("📄 Document", callback_data="doc"),
             InlineKeyboardButton("🎬 Video", callback_data="vid"),
             InlineKeyboardButton("🎵 Audio", callback_data="aud"),
         ],
-        [
-            InlineKeyboardButton("❌ Cancel", callback_data="cancel")
-        ]
+        [InlineKeyboardButton("❌ Cancel", callback_data="cancel")]
     ])
 
     await message.reply_text(
