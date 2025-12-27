@@ -1,9 +1,9 @@
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram import filters
+from plugins.cb_data import app   # 🔥 সবচেয়ে গুরুত্বপূর্ণ লাইন
 from script import *
 from config import *
 
-# ⚠️ এখানে ধরে নেওয়া হয়েছে app = Client(...) আগেই bot.py / main client থেকে লোড হচ্ছে
 
 @app.on_callback_query(filters.regex('about'))
 async def about(_, update):
